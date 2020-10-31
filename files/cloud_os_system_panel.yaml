@@ -2,9 +2,9 @@ version: "3.7"
 
 secrets:
     AUTH_PUBLIC_KEY:
-        file: ./auth_public.key
+        file: ../keys/auth_public.key
     AUTH_PRIVATE_KEY:
-        file: ./auth_private.key
+        file: ../keys/auth_private.key
 
 
 services:
@@ -19,7 +19,7 @@ services:
             - AUTH_PUBLIC_KEY
             - AUTH_PRIVATE_KEY
         env_file:
-            - env.cloud_os.conf
+            - ../keys/env.cloud_os.conf
         environment:
             CLOUD_SOFTWARE_NAME: "bayrell.cloud_os.system_panel"
         deploy:
@@ -35,7 +35,7 @@ services:
                 window: 120s
             placement:
                 constraints:
-                    - node.type.name == docker0
+                    - node.labels.name == docker0
         networks:
             - backend
             - cloud_router

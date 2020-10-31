@@ -9,7 +9,7 @@ services:
         volumes:
             - "mysql1_data:/data"
         env_file:
-            - env.cloud_os.conf
+            - ../keys/env.cloud_os.conf
         deploy:
             replicas: 1
             endpoint_mode: dnsrr
@@ -23,7 +23,7 @@ services:
                 window: 120s
             placement:
                 constraints:
-                    - node.type.name == docker0
+                    - node.labels.name == docker0
         networks:
             - backend
         logging:

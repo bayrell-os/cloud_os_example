@@ -9,7 +9,7 @@ services:
             - "router_data:/data"
             - "/var/run/docker.sock:/var/run/docker.sock:ro"
         env_file:
-            - env.cloud_os.conf
+            - ../keys/env.cloud_os.conf
         environment:
             DNS_RESOLVER: 127.0.0.11
             CLOUD_SOFTWARE_NAME: "bayrell.cloud_os.router"
@@ -26,7 +26,7 @@ services:
                 window: 120s
             placement:
                 constraints:
-                    - node.type.name == docker0
+                    - node.labels.name == docker0
         networks:
             - cloud_router
         ports:

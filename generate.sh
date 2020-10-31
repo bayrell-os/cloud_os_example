@@ -2,7 +2,7 @@
 
 # Settings
 
-CLOUD_DOMAIN="cloud_os.local"
+CLOUD_DOMAIN="cloud_os.test"
 MANAGER_NODE="docker0"
 
 
@@ -12,30 +12,32 @@ CLOUD_KEY=`cat /dev/urandom | tr -dc 'a-zA-Z0-9' | head -c 128`
 CLOUD_MYSQL_PASSWORD=`cat /dev/urandom | tr -dc 'a-zA-Z0-9' | head -c 16`
 PROD_MYSQL_PASSWORD=`cat /dev/urandom | tr -dc 'a-zA-Z0-9' | head -c 16`
 
-rm -f files/auth_private.key
-rm -f files/auth_public.key
+mkdir -p keys
 
-openssl genrsa -out files/auth_private.key 2048
-openssl rsa -in files/auth_private.key -outform PEM -pubout -out files/auth_public.key
+rm -f keys/auth_private.key
+rm -f keys/auth_public.key
 
-cat files/env.cloud_os.example > files/env.cloud_os.conf
-cat files/env.prod.example > files/env.prod.conf
+openssl genrsa -out keys/auth_private.key 2048
+openssl rsa -in keys/auth_private.key -outform PEM -pubout -out keys/auth_public.key
 
-sed -i "s|MYSQL_ROOT_PASSWORD=.*|MYSQL_ROOT_PASSWORD=${CLOUD_MYSQL_PASSWORD}|g" files/env.cloud_os.conf;
-sed -i "s|MYSQL_PASSWORD=.*|MYSQL_PASSWORD=${CLOUD_MYSQL_PASSWORD}|g" files/env.cloud_os.conf;
-sed -i "s|CLOUD_DOMAIN=.*|CLOUD_DOMAIN=${CLOUD_DOMAIN}|g" files/env.cloud_os.conf;
-sed -i "s|CLOUD_KEY=.*|CLOUD_KEY=${CLOUD_KEY}|g" files/env.cloud_os.conf;
+cat files/env.cloud_os.example > keys/env.cloud_os.conf
+cat files/env.prod.example > keys/env.prod.conf
 
-sed -i "s|MYSQL_ROOT_PASSWORD=.*|MYSQL_ROOT_PASSWORD=${CLOUD_MYSQL_PASSWORD}|g" files/env.prod.conf;
-sed -i "s|MYSQL_PASSWORD=.*|MYSQL_PASSWORD=${CLOUD_MYSQL_PASSWORD}|g" files/env.prod.conf;
-sed -i "s|CLOUD_DOMAIN=.*|CLOUD_DOMAIN=${CLOUD_DOMAIN}|g" files/env.prod.conf;
-sed -i "s|CLOUD_KEY=.*|CLOUD_KEY=${CLOUD_KEY}|g" files/env.prod.conf;
+sed -i "s|MYSQL_ROOT_PASSWORD=.*|MYSQL_ROOT_PASSWORD=${CLOUD_MYSQL_PASSWORD}|g" keys/env.cloud_os.conf;
+sed -i "s|MYSQL_PASSWORD=.*|MYSQL_PASSWORD=${CLOUD_MYSQL_PASSWORD}|g" keys/env.cloud_os.conf;
+sed -i "s|CLOUD_DOMAIN=.*|CLOUD_DOMAIN=${CLOUD_DOMAIN}|g" keys/env.cloud_os.conf;
+sed -i "s|CLOUD_KEY=.*|CLOUD_KEY=${CLOUD_KEY}|g" keys/env.cloud_os.conf;
+
+sed -i "s|MYSQL_ROOT_PASSWORD=.*|MYSQL_ROOT_PASSWORD=${CLOUD_MYSQL_PASSWORD}|g" keys/env.prod.conf;
+sed -i "s|MYSQL_PASSWORD=.*|MYSQL_PASSWORD=${CLOUD_MYSQL_PASSWORD}|g" keys/env.prod.conf;
+sed -i "s|CLOUD_DOMAIN=.*|CLOUD_DOMAIN=${CLOUD_DOMAIN}|g" keys/env.prod.conf;
+sed -i "s|CLOUD_KEY=.*|CLOUD_KEY=${CLOUD_KEY}|g" keys/env.prod.conf;
 
 
-if [ ! -d test ]; then
-  mkdir -p test
-  cp files/auth_private.key test/auth_private.key
-  cp files/auth_public.key test/auth_public.key
-  cp files/env.cloud_os.conf test/env.cloud_os.conf
-  cp files/env.prod.conf test/env.prod.conf
+if [ ! -d save ]; then
+  mkdir -p save
+  cp keys/auth_private.key save/auth_private.key
+  cp keys/auth_public.key save/auth_public.key
+  cp keys/env.cloud_os.conf save/env.cloud_os.conf
+  cp keys/env.prod.conf save/env.prod.conf
 fi

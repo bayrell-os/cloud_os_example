@@ -2,9 +2,9 @@ version: "3.7"
 
 secrets:
     AUTH_PRIVATE_KEY:
-        file: ./auth_private.key
+        file: ../keys/auth_private.key
     AUTH_PUBLIC_KEY:
-        file: ./auth_public.key
+        file: ../keys/auth_public.key
 
 services:
     
@@ -12,12 +12,12 @@ services:
         image: bayrell/cloud_os_installer:0.1.0
         hostname: "{{.Service.Name}}.{{.Task.ID}}.local"
         volumes:
-            - "cloud_os_installer_data:/data"
+            - "installer_data:/data"
         secrets:
             - AUTH_PRIVATE_KEY
             - AUTH_PUBLIC_KEY
         env_file:
-            - env.cloud_os.conf
+            - ../keys/env.cloud_os.conf
         environment:
             CLOUD_SOFTWARE_NAME: "bayrell.cloud_os.installer"
             CLOUD_LOGIN_ADMIN: "main"
@@ -36,7 +36,7 @@ services:
                 window: 120s
             placement:
                 constraints:
-                    - node.type.name == docker0
+                    - node.labels.name == docker0
         networks:
             - backend
             - cloud_router
@@ -50,7 +50,7 @@ services:
 
             
 volumes:
-    cloud_os_installer_data:
+    installer_data:
 
 networks:
     
