@@ -30,3 +30,12 @@ sed -i "s|MYSQL_ROOT_PASSWORD=.*|MYSQL_ROOT_PASSWORD=${CLOUD_MYSQL_PASSWORD}|g" 
 sed -i "s|MYSQL_PASSWORD=.*|MYSQL_PASSWORD=${CLOUD_MYSQL_PASSWORD}|g" files/env.prod.conf;
 sed -i "s|CLOUD_DOMAIN=.*|CLOUD_DOMAIN=${CLOUD_DOMAIN}|g" files/env.prod.conf;
 sed -i "s|CLOUD_KEY=.*|CLOUD_KEY=${CLOUD_KEY}|g" files/env.prod.conf;
+
+
+if [ ! -d test ]; then
+  mkdir -p test
+  cp files/auth_private.key test/auth_private.key
+  cp files/auth_public.key test/auth_public.key
+  cp files/env.cloud_os.conf test/env.cloud_os.conf
+  cp files/env.prod.conf test/env.prod.conf
+fi
