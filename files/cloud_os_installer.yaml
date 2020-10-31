@@ -1,0 +1,62 @@
+version: "3.7"
+
+secrets:
+    AUTH_PRIVATE_KEY:
+        file: ./auth_private.key
+    AUTH_PUBLIC_KEY:
+        file: ./auth_public.key
+
+services:
+    
+    installer:
+        image: bayrell/cloud_os_installer:0.1.0
+        hostname: "{{.Service.Name}}.{{.Task.ID}}.local"
+        volumes:
+            - "cloud_os_installer_data:/data"
+        secrets:
+            - AUTH_PRIVATE_KEY
+            - AUTH_PUBLIC_KEY
+        env_file:
+            - env.cloud_os.conf
+        environment:
+            CLOUD_SOFTWARE_NAME: "bayrell.cloud_os.installer"
+            CLOUD_LOGIN_ADMIN: "main"
+            CLOUD_LOGIN_PASSWORD: "main"
+            AUTH_COOKIE_NAME: installer_auth_token
+        deploy:
+            replicas: 1
+            endpoint_mode: dnsrr
+            update_config:
+                parallelism: 1
+                failure_action: rollback
+                delay: 5s
+            restart_policy:
+                condition: "on-failure"
+                delay: 10s
+                window: 120s
+            placement:
+                constraints:
+                    - node.type.name == docker0
+        networks:
+            - backend
+            - cloud_router
+        ports:
+          - target: 80
+            published: 88
+            protocol: tcp
+            mode: host            
+        logging:
+            driver: journald
+
+            
+volumes:
+    cloud_os_installer_data:
+
+networks:
+    
+    cloud_router:
+        external: true
+    
+    backend:
+        driver: overlay
+        attachable: true

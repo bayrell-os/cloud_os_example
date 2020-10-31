@@ -1,0 +1,55 @@
+version: "3.7"
+
+secrets:
+    AUTH_PUBLIC_KEY:
+        file: ./auth_public.key
+    AUTH_PRIVATE_KEY:
+        file: ./auth_private.key
+
+
+services:
+    
+    system_panel:
+        image: bayrell/cloud_os:0.1.0
+        hostname: "{{.Service.Name}}.{{.Task.ID}}.local"
+        volumes:
+            - "system_panel_data:/data"
+            - "/var/run/docker.sock:/var/run/docker.sock:ro"
+        secrets:
+            - AUTH_PUBLIC_KEY
+            - AUTH_PRIVATE_KEY
+        env_file:
+            - env.cloud_os.conf
+        environment:
+            CLOUD_SOFTWARE_NAME: "bayrell.cloud_os.system_panel"
+        deploy:
+            replicas: 1
+            endpoint_mode: dnsrr
+            update_config:
+                parallelism: 1
+                failure_action: rollback
+                delay: 5s
+            restart_policy:
+                condition: "on-failure"
+                delay: 10s
+                window: 120s
+            placement:
+                constraints:
+                    - node.type.name == docker0
+        networks:
+            - backend
+            - cloud_router
+        logging:
+            driver: journald
+
+volumes:
+    system_panel_data:
+
+networks:
+    
+    cloud_router:
+        external: true
+    
+    backend:
+        driver: overlay
+        attachable: true
