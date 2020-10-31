@@ -143,5 +143,10 @@ CREATE TABLE `users_auth` (
   UNIQUE KEY `user_id_method` (`user_id`,`method`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+INSERT INTO `users` (`user_id`, `login`, `name`, `banned`, `is_deleted`) VALUES
+(1,	'admin',	'Admin',	0,	0);
+
+INSERT INTO `users_auth` (`user_id`, `method`, `value`) VALUES
+(1,	'password',	'$2y$11$lWc6h3LfOM.ba.qFgFLFWuCtAMw6GLa6sTARQ1tR2W6XUEyMEPTn6');
 
 -- 2020-10-31 12:01:32

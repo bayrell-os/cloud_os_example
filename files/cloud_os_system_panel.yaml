@@ -10,7 +10,7 @@ secrets:
 services:
     
     system_panel:
-        image: bayrell/cloud_os:0.1.0
+        image: bayrell/cloud_os_standard:0.1.0
         hostname: "{{.Service.Name}}.{{.Task.ID}}.local"
         volumes:
             - "system_panel_data:/data"
@@ -21,7 +21,8 @@ services:
         env_file:
             - ../keys/env.cloud_os.conf
         environment:
-            CLOUD_SOFTWARE_NAME: "bayrell.cloud_os.system_panel"
+            CLOUD_SOFTWARE_NAME: "bayrell.cloud_os.standard"
+            MYSQL_DB: "system_panel"
         deploy:
             replicas: 1
             endpoint_mode: dnsrr
