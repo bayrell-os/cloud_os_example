@@ -34,10 +34,10 @@ sed -i "s|CLOUD_DOMAIN=.*|CLOUD_DOMAIN=${CLOUD_DOMAIN}|g" keys/env.prod.conf;
 sed -i "s|CLOUD_KEY=.*|CLOUD_KEY=${CLOUD_KEY}|g" keys/env.prod.conf;
 
 
-if [ ! -d save ]; then
-  mkdir -p save
-  cp keys/auth_private.key save/auth_private.key
-  cp keys/auth_public.key save/auth_public.key
-  cp keys/env.cloud_os.conf save/env.cloud_os.conf
-  cp keys/env.prod.conf save/env.prod.conf
+if [ ! -d keys.save ]; then
+  mkdir -p keys.save
+  cp keys/auth_private.key keys.save/auth_private.key
+  cp keys/auth_public.key keys.save/auth_public.key
+  cp keys/env.cloud_os.conf keys.save/env.cloud_os.conf
+  cp keys/env.prod.conf keys.save/env.prod.conf
 fi
